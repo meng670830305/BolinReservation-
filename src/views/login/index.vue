@@ -53,9 +53,10 @@
 
 <script setup>
 import { Lock, UserFilled } from '@element-plus/icons-vue';
-import { ref, reactive } from 'vue'
-import { getCode, login, userAuthentication } from '../../api'
+import { ref, reactive, computed, toRaw } from 'vue'
+import { getCode, login, userAuthentication, menuPermissions } from '../../api'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 const imgUrl = new URL('../../../public/login-head.png', import.meta.url).href
 const phoneReg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
@@ -141,14 +142,14 @@ const countdownChange = () => {
 
 const router = useRouter()
 const loginFormRef = ref()
+const store = useStore()
+const routerList = computed(() => store.state.menu.routerList)
 //表单提交
 const submitForm = async (formEl) => {
   if (!formEl) return
   //手动触发校验
   await formEl.validate((valid, fields) => {
     if (valid) {
-      // console.log('submit!')
-      console.log(loginForm, 'submit!')
       //注册页面
       if (formType.value) {
         userAuthentication(loginForm).then(({ data }) => {
@@ -161,10 +162,16 @@ const submitForm = async (formEl) => {
         login(loginForm).then(({ data }) => {
           if (data.code === 10000) {
             ElMessage.success('登录成功。')
-            console.log(data)
             //将token和用户信息缓存到浏览器
             localStorage.setItem('pz_token', data.data.token)
             localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
+            menuPermissions().then((data) => {
+              store.commit('dynamicMenu', data.data.data)
+              console.log(routerList, 'routerList');
+              toRaw(routerList.value).forEach(item => {
+                router.addRoute('main', item)
+              })
+            })
             //跳转首页
             router.push('/')
           }
