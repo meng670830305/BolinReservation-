@@ -1,8 +1,12 @@
-const state = {
-  isCollapse: false,
-  selectMenu: [],
-  routerList: [],
-};
+const localData = localStorage.getItem('pz_v3pz');
+const state = localData
+  ? localData.menu
+  : {
+      isCollapse: false,
+      selectMenu: [],
+      routerList: [],
+      menuActive: '1-1',
+    };
 const mutations = {
   collapseMenu(state) {
     state.isCollapse = !state.isCollapse;
@@ -26,7 +30,6 @@ const mutations = {
   },
 
   dynamicMenu(state, payLoad) {
-    console.log(payLoad, 'payLoad');
     const modules = import.meta.glob('../views/**/**/*.vue');
     function routerSet(router) {
       router.forEach((route) => {
@@ -43,6 +46,11 @@ const mutations = {
     routerSet(payLoad);
     //拿到完整的路由数据
     state.routerList = payLoad;
+  },
+  //保存菜单默认Index值（刷新后打开菜单默认Index）
+  updataMenuActive(state, payLoad) {
+    state.menuActive = payLoad;
+    console.log(state.menuActive, 'state.menuActive');
   },
 };
 export default {

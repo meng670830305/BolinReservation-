@@ -12,11 +12,11 @@
             :class="{selected: route.path===item.path}"
             class="tab flex-box">
           <el-icon size="12">
-            <component :is="item.meta.icon" />
+            <component :is="item.icon" />
           </el-icon>
           <router-link class="text flex-box a"
                        :to="{path:item.path}">
-            {{ item.meta.name }}
+            {{ item.name }}
           </router-link>
           <el-icon class="close"
                    size="12"
@@ -29,8 +29,8 @@
     <div class="header-right">
       <el-dropdown @command="handleClick">
         <div class="el-dropdown-link flex-box">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
-          <p class="user-name">admin</p>
+          <el-avatar :src="userInfo.avatar" />
+          <p class="user-name">{{userInfo.name}}</p>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -53,6 +53,9 @@ const store = useStore()
 const route = useRoute()
 const router = useRouter()
 const selectMenu = store.state.menu.selectMenu
+
+const userInfo = JSON.parse(localStorage.getItem('pz_userInfo'))
+
 //点击关闭Tab
 const closeTab = (item, index) => {
   store.commit('closeMenu', item)

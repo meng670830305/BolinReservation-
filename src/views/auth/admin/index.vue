@@ -1,5 +1,5 @@
 <template>
-  <panel-head />
+  <panel-head :route="route" />
 
   <el-table :data="tableData.list"
             style="width: 100%">
@@ -94,6 +94,8 @@
 import { authAdmin, menuSelectlist, updateUser } from '../../../api';
 import { ref, reactive, onMounted } from 'vue'
 import dayjs from 'dayjs';
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 onMounted(() => {
   getListData()

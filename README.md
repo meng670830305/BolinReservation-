@@ -23,6 +23,8 @@ Vant https://vant-ui.github.io/vant/#/zh-CN
 
 Dayjs https://day.js.org/docs/zh-CN/installation/installation
 
+vuex-persistedstate
+
 vue 插件
 Auto Rename Tag
 介绍：当你修改一个 HTML/XML 标签时，这个插件会自动帮你修改对应的闭合标签。

@@ -6,12 +6,31 @@ import Group from '../views/auth/group/index.vue';
 import Order from '../views/vppz/order/index.vue';
 import Staff from '../views/vppz/staff/index.vue';
 import Dashboard from '../views/dashboard/index.vue';
-
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
+const localData = localStorage.getItem('pz_v3pz');
+const active = computed(() => store.state.menu.menuActive);
 const routes = [
   {
     path: '/',
     component: Layout,
     name: 'main',
+    redirect: (to) => {
+      if (localData) {
+        //有子菜单的情况
+        const child = JSON.parse(localData).menu.routerList[0].children;
+        if (child) {
+          return child[0].meta.path;
+        } else {
+          return JSON.parse(localData).menu.routerList[0].meta.path;
+        }
+      } else {
+        store.commit('updataMenuActive', '1-1');
+        console.log(active.value, 'active.value');
+        return '/';
+      }
+    },
     children: [
       // {
       //     path: '/dashboard',

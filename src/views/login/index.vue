@@ -167,13 +167,14 @@ const submitForm = async (formEl) => {
             localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
             menuPermissions().then((data) => {
               store.commit('dynamicMenu', data.data.data)
-              console.log(routerList, 'routerList');
+              //向路由器中添加路由
+              //toRaw 是 Vue 3 中的一个函数，它用于获取一个由 reactive 或 ref 创建的响应式对象的原始对象。
               toRaw(routerList.value).forEach(item => {
                 router.addRoute('main', item)
               })
+              //跳转首页
+              router.push('/')
             })
-            //跳转首页
-            router.push('/')
           }
         })
       }

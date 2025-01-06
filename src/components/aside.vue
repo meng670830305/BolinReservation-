@@ -3,18 +3,19 @@
            background-color="#545c64"
            translate="no"
            class="aside-container el-menu--sidebar"
-           default-active="2"
            text-color="#fff"
-           router:default-active="router.path"
            @open="handleOpen"
            @close="handleClose"
-           :collapse="isCollapse">
+           :collapse="isCollapse"
+           :default-active="active">
     <p class="logo-lg">
       {{ isCollapse ? '予約' : '予約管理' }}
     </p>
-    <TreeMenu v-for="item in menuList"
+    <TreeMenu :index="1"
+              :menuList="menuList" />
+    <!-- <TreeMenu v-for="item in menuList"
               :item="item"
-              :key="item.path" />
+              :key="item.path" /> -->
   </el-menu>
 
 </template>
@@ -29,9 +30,9 @@ import { useStore } from 'vuex'
 const router = useRouter()
 // const menuList = reactive(router.options.routes[0].children)
 const store = useStore()
-const menuList = computed(() => store.state.menu.routerList)
+const menuList = reactive(computed(() => store.state.menu.routerList))
 const isCollapse = computed(() => store.state.menu.isCollapse)
-
+const active = computed(() => store.state.menu.menuActive)
 const handleOpen = () => { }
 const handleClose = () => { }
 
