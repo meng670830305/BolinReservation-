@@ -1,5 +1,6 @@
 
 <template>
+  <panel-head :route="route" />
   <div class="btns">
     <el-button :icon="Plus"
                type="primary"
@@ -9,9 +10,14 @@
                    cancel-button-text="No"
                    :icon="InfoFilled"
                    icon-color="#626AEF"
-                   title="Are you sure to delete this?"
+                   title="是否确认删除"
                    @confirm="confirmEvent"
                    @cancel="cancelEvent">
+      <template #reference>
+        <el-button type="danger"
+                   size="small"
+                   :icon="Delete">删除</el-button>
+      </template>
     </el-popconfirm>
   </div>
   <el-table :data="tableData.list"
@@ -167,11 +173,13 @@
 </template>
 
 <script setup>
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, InfoFilled, Delete } from '@element-plus/icons-vue'
 import { reactive, ref, onMounted, nextTick } from 'vue'
-import { photoList, companion, companionList } from '../../../api'
+import { photoList, companion, companionList, deleteCompanion } from '../../../api'
 import dayjs from 'dayjs';
 import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
+
 
 onMounted(() => {
   photoList().then(({ data }) => {
@@ -180,10 +188,12 @@ onMounted(() => {
   getListData()
 })
 
+const route = useRoute()
 const dialogFormVisable = ref(false)
 const dialogImgVisable = ref(false)
 const fileList = ref([])
 const selectIndex = ref(0)
+const selectTableData = ref([])
 //弹窗关闭操作
 const beforeClose = () => {
   dialogFormVisable.value = false
@@ -289,10 +299,28 @@ const getListData = () => {
 const selectImg = (index) => {
   selectIndex.value = index
 }
-
-const handleSelectionChange = () => {
-
+//选择删除行
+const handleSelectionChange = (val) => {
+  selectTableData.value = val.map(item => ({ id: item.id }))
 }
+
+//点击删除按钮
+const confirmEvent = () => {
+  //没有选择的情况下
+  if (!selectTableData.value.length) {
+    return ElMessage.warning('请选择要删除的数据')
+  }
+  deleteCompanion({ id: selectTableData.value }).then(({ data }) => {
+    if (data.code === 10000) {
+      ElMessage.success('success delete!')
+      getListData()
+    }
+    else {
+      ElMessage.error(data.message)
+    }
+  })
+}
+
 </script>
 
 <style lang="less" scoped>
