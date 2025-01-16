@@ -16,7 +16,7 @@
     <el-table-column label="操作">
       <template #default="scope">
         <el-button type="primary"
-                   @click="open(scope.row)">编辑</el-button>
+                   @click="open(scope.row)">編集</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -174,6 +174,7 @@ const confirm = async (formEl) => {
   })
 }
 </script>
+
 
 <style lang="less" scoped>
 .btns {

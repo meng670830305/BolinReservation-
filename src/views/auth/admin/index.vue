@@ -21,7 +21,6 @@
         <el-tag :type="scope.row.active ? 'success' : 'danger'">{{ scope.row.active ? '正常 ' : '失效' }}</el-tag>
       </template>
     </el-table-column>
-
     <el-table-column prop="create_time"
                      label="创建时间">
       <template #default="scope">
